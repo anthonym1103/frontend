@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Área Contratado</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar">
+    <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Área del Contratado</h2>
+      <p>¡Bienvenido, <span id="nombreContratado"></span>!</p>
+
+      <div id="recibos-nomina-container"></div>
+      <div id="constancias-emitidas-container"></div>
+
+      <h3>Solicitar Constancia</h3>
+      <button class="boton" onclick="solicitarConstanciaTrabajo();">Solicitar Constancia de Trabajo</button>
+      <div id="constancia-generada" style="border: 1px solid #ccc; padding: 15px; margin-top: 20px; margin-bottom: 20px; display: none; background-color: #f9f9f9;">
+      </div>
+
+      <a class="boton" href="index.html">Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Hiring Group | Contratado</p>
+  </footer>
+
+  <script src="js/control_acceso.js"></script>
+
+  <script>
+    let usuarioActualContratado = null; // Variable global para el usuario activo
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Verificar acceso para el tipo "contratado"
+      const usuarioActivo = obtenerUsuarioActivo();
+      if (!usuarioActivo || usuarioActivo.tipo !== "contratado") {
+        alert("Acceso denegado. Debes iniciar sesión como contratado.");
+        window.location.href = "login.html";
+        return;
+      }
+      usuarioActualContratado = usuarioActivo; // Asignar el usuario activo a la variable global
+
+      document.getElementById("nombreContratado").textContent = usuarioActualContratado.nombreCompleto || usuarioActualContratado.usuario;
+
+      renderizarRecibosNomina();
+      renderizarConstanciasEmitidas();
+    });
+
+    /**
+     * Renders the payroll receipts for the active contracted user.
+     */
+    function renderizarRecibosNomina() {
+      const container = document.getElementById('recibos-nomina-container');
+      container.innerHTML = ''; // Limpiar el contenedor
+
+      const h3 = document.createElement('h3');
+      h3.textContent = 'Mis Recibos de Nómina';
+      container.appendChild(h3);
+
+      const recibosList = document.createElement('ul');
+      recibosList.id = 'lista-recibos-nomina';
+      container.appendChild(recibosList);
+
+      if (usuarioActualContratado.recibosNomina && usuarioActualContratado.recibosNomina.length > 0) {
+        usuarioActualContratado.recibosNomina.forEach(recibo => {
+          const li = document.createElement('li');
+          // CAMBIO AQUÍ: Usar recibo.salarioNeto y recibo.fechaEmision
+          li.textContent = `Mes: ${recibo.mes}/${recibo.anio} - Monto Neto: Bs. ${recibo.salarioNeto} - Emitido: ${recibo.fechaEmision}`;
+          recibosList.appendChild(li);
+        });
+      } else {
+        recibosList.innerHTML = '<p>No se han generado recibos de nómina aún.</p>';
+      }
+    }
+
+    /**
+     * Renders the issued certifications for the active contracted user.
+     */
+    function renderizarConstanciasEmitidas() {
+      const container = document.getElementById('constancias-emitidas-container');
+      container.innerHTML = ''; // Limpiar el contenedor
+
+      const h3 = document.createElement('h3');
+      h3.textContent = 'Mis Constancias Emitidas';
+      container.appendChild(h3);
+
+      const constanciasList = document.createElement('ul');
+      constanciasList.id = 'lista-constancias-emitidas';
+      container.appendChild(constanciasList);
+
+      if (usuarioActualContratado.constanciasEmitidas && usuarioActualContratado.constanciasEmitidas.length > 0) {
+        usuarioActualContratado.constanciasEmitidas.forEach(constancia => {
+          const li = document.createElement('li');
+          // CAMBIO AQUÍ: Usar constancia.texto
+          // Utiliza 'innerHTML' y <pre> para mantener el formato del texto de la constancia
+          // Reemplaza comillas simples para evitar problemas en onclick
+          const displayTexto = constancia.texto ? constancia.texto.replace(/'/g, "&apos;") : 'Contenido no disponible'; // Asegura que 'texto' existe
+          const liContent = `Tipo: ${constancia.tipo} - Fecha: ${constancia.fechaEmision}<br>
+                                 <pre style="white-space: pre-wrap; font-family: inherit;">${displayTexto}</pre>
+                                 <button class="boton" onclick="imprimirConstancia(this.previousElementSibling.innerHTML);">Imprimir</button>`;
+          li.innerHTML = liContent;
+          constanciasList.appendChild(li);
+        });
+      } else {
+        constanciasList.innerHTML = '<p>No se han emitido constancias aún.</p>';
+      }
+    }
+
+    /**
+     * Handles the request for a new work certificate.
+     */
+    function solicitarConstanciaTrabajo() {
+      if (!usuarioActualContratado || usuarioActualContratado.tipo !== "contratado") {
+        alert("Debes iniciar sesión como contratado para solicitar una constancia.");
+        return;
+      }
+
+      // Llama a la función de js2.txt para generar el texto de la constancia
+      const textoConstancia = generarConstanciaTrabajo(usuarioActualContratado.usuario);
+
+      if (textoConstancia) {
+        // Mostrar la constancia en el div predefinido
+        const constanciaDiv = document.getElementById('constancia-generada');
+        constanciaDiv.innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit;">${textoConstancia}</pre><button class="boton" onclick="imprimirConstancia(this.previousElementSibling.innerHTML)">Imprimir</button>`;
+        constanciaDiv.style.display = 'block'; // Hacer visible el div
+
+        // Opcional: Preguntar al usuario si desea guardar esta constancia en su historial
+        const confirmacion = confirm("¿Deseas guardar esta constancia en tu historial?");
+        if (confirmacion) {
+          // Llama a la función emitirConstancia del js2.txt para guardarla
+          emitirConstancia(usuarioActualContratado.usuario, 'Trabajo', textoConstancia);
+          // Actualizar el objeto de usuario activo para reflejar el cambio antes de volver a renderizar
+          usuarioActualContratado = obtenerUsuarioActivo(); // Re-cargar datos del usuario
+          renderizarConstanciasEmitidas(); // Vuelve a renderizar para mostrar la nueva constancia
+          alert("Constancia guardada en tu historial.");
+        }
+
+      } else {
+        alert("No se pudo generar la constancia. Asegúrate de que tus datos de contratación estén completos en el sistema.");
+      }
+    }
+
+    /**
+     * Opens a new window to print the given HTML content.
+     * @param {string} contenidoHTML The HTML content to print.
+     */
+    function imprimirConstancia(contenidoHTML) {
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write('<html><head><title>Constancia de Trabajo</title>');
+      printWindow.document.write('<style>body { font-family: Arial, sans-serif; margin: 40px; } pre { font-family: Arial, sans-serif; white-space: pre-wrap; }</style>');
+      printWindow.document.write('</head><body>');
+      printWindow.document.write(contenidoHTML);
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.print();
+    }
+  </script>
+</body>
+</html>

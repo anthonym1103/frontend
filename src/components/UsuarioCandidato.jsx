@@ -47,7 +47,14 @@ const UsuarioCandidato = ()=>{
     const navegate = useNavigate()
 
     const handlerPostulacionClick = () => {
-        navegate('/usuariocandidato/postulacion');
+        navegate('/usuariocandidato/gestionarpostulacion');
+    }
+
+    const handlerModExperienciaClick = () => {
+        navegate('/usuariocandidato/modificarexperiencias');
+    }
+    const handlerModProfesionClick = () => {
+        navegate('/usuariocandidato/modificarprofesiones');
     }
 
     const getOfertas = async () => {
@@ -76,10 +83,10 @@ const UsuarioCandidato = ()=>{
             <h2>Mi Perfil de Candidato || Ofertas Disponibles</h2>
             <div className="botnsGestion">
                 <span className="botonFormulario">
-                    <button type="submit" >Modificar Experiencia Laboral</button>
+                    <button type="submit" onClick={handlerModExperienciaClick}>Modificar Experiencia Laboral</button>
                 </span>
                 <span className="botonFormulario">
-                    <button type="submit" >Modificar Profesion</button>
+                    <button type="submit" onClick={handlerModProfesionClick}>Modificar Profesion</button>
                 </span>
             </div>
             {

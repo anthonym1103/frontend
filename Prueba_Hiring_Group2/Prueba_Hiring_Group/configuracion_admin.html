@@ -1,0 +1,39 @@
+configuracion_admin
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Configurar Accesos</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header>
+    <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+    <h1>Hiring Group</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Otorgar Permisos a Empresas o Usuarios Específicos</h2>
+      <form onsubmit="event.preventDefault(); handleAsignarPermiso();">
+        <input type="text" id="usuarioDestino" placeholder="Usuario (ej: 'empresa23')" required>
+        <button type="submit" class="boton">Otorgar Permiso de Administrador</button>
+        <p>Nota: Este permiso se refiere a la capacidad de un usuario de "empresa" para acceder a funciones de administración si fuera necesario,
+           o simplemente un permiso especial. En esta simulación, solo el usuario "admin" puede otorgar un permiso 'admin' a otros usuarios.</p>
+      </form>
+      <a class="boton" href="administrador.html"> Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Hiring Group | Configuración</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    function handleAsignarPermiso() {
+      const usuario = document.getElementById('usuarioDestino').value;
+      asignarPermiso(usuario);
+    }
+  </script>
+</body>
+</html>

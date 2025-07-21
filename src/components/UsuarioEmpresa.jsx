@@ -97,7 +97,7 @@ const UsuarioEmpresa = ()=>{
             <BarraNav
                 redireccion1={'/'}
                 texto1={"Ir a inicio"}
-                redireccion2={'/'}
+                redireccion2={'/usuarioempresa/gestionariniciosesion'}
                 texto2={"Editar Inicio Sesion"}
                 tipo={true}
             />

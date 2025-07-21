@@ -1,0 +1,68 @@
+manejo_data_basica
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Manejo de Data Básica</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar">
+    <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+      <nav>
+        <ul>
+          </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Manejo de Data Básica</h2>
+      <p>Aquí puedes administrar los datos básicos del sistema, como la lista de bancos.</p>
+
+      <h3>Administrar Bancos</h3>
+      <form onsubmit="event.preventDefault(); agregarNuevoBanco();">
+        <input type="text" id="nombreBanco" placeholder="Nombre del nuevo banco" required>
+        <button type="submit" class="boton">Agregar Banco</button>
+      </form>
+      <h4>Bancos Registrados</h4>
+      <ul id="lista-bancos"></ul>
+
+      <a class="boton" href="hiring_group_panel.html">Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Universidad Nacional Experimental de Guayana | Prof. María Raquel Herrera</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      renderizarBancos();
+    });
+    function agregarNuevoBanco() {
+      const nombre = document.getElementById("nombreBanco").value;
+      if (agregarBanco(nombre)) {
+        renderizarBancos();
+        document.getElementById("nombreBanco").value = '';
+      }
+    }
+
+    function renderizarBancos() {
+      const lista = document.getElementById("lista-bancos");
+      lista.innerHTML = '';
+      const bancos = obtenerBancos();
+      bancos.forEach(b => {
+        const li = document.createElement("li");
+        li.textContent = b;
+        lista.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>

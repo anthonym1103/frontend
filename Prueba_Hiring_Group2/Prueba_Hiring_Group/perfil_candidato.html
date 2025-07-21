@@ -1,0 +1,164 @@
+perfil_candidato
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-12">
+  <title>Perfil del Candidato</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar">
+    <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+      <nav>
+        <ul>
+          </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Mi Perfil de Candidato</h2>
+      <div id="datos-candidato">
+        </div>
+
+      <h3>Experiencia Laboral</h3>
+      <form onsubmit="event.preventDefault(); agregarNuevaExperiencia();">
+        <input type="text" id="expEmpresa" placeholder="Empresa" required>
+        <input type="text" id="expCargo" placeholder="Cargo Ocupado" required>
+        <input type="date" id="expFechaInicio" placeholder="Fecha de Inicio" required>
+        <input type="date" id="expFechaFin" placeholder="Fecha de Finalización (o dejar vacío si actual)">
+        <button type="submit" class="boton">Agregar Experiencia</button>
+      </form>
+      <ul id="lista-experiencias">
+        </ul>
+
+      <h3>Mis Postulaciones</h3>
+      <ul id="lista-postulaciones">
+        </ul>
+
+        <a class="boton" href="index.html"> Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Hiring Group | Perfil Candidato</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    let usuarioActualCandidato = null;
+    document.addEventListener("DOMContentLoaded", () => {
+      usuarioActualCandidato = obtenerUsuarioActivo();
+      if (!usuarioActualCandidato || usuarioActualCandidato.tipo !== "candidato") {
+        alert("Acceso denegado. Debes iniciar sesión como candidato.");
+        window.location.href = "login.html";
+        return;
+      }
+      renderizarDatosCandidato();
+      renderizarExperiencias();
+      renderizarPostulaciones();
+    });
+    function renderizarDatosCandidato() {
+      const datosDiv = document.getElementById("datos-candidato");
+      datosDiv.innerHTML = `
+        <p><strong>Usuario:</strong> ${localStorage.getItem("usuarioActivo")}</p>
+        <p><strong>Nombre:</strong> ${usuarioActualCandidato.nombreCompleto || 'N/A'}</p>
+        <p><strong>Correo:</strong> ${usuarioActualCandidato.correo || 'N/A'}</p>
+        <p><strong>Profesión:</strong> ${usuarioActualCandidato.profesion || 'N/A'}</p>
+        <p><strong>Universidad:</strong> ${usuarioActualCandidato.universidad || 'N/A'}</p>
+        <button class="boton" onclick="editarDatosPersonalesCandidato()">Editar Perfil</button>
+      `;
+    }
+
+    function editarDatosPersonalesCandidato() {
+        const newName = prompt("Nuevo nombre completo:", usuarioActualCandidato.nombreCompleto);
+        const newEmail = prompt("Nuevo correo electrónico:", usuarioActualCandidato.correo);
+        const newProfesion = prompt("Nueva profesión:", usuarioActualCandidato.profesion);
+        const newUniversidad = prompt("Nueva universidad:", usuarioActualCandidato.universidad);
+        if (newName !== null && newEmail !== null && newProfesion !== null && newUniversidad !== null) {
+            Object.assign(usuarioActualCandidato, {
+                nombreCompleto: newName,
+                correo: newEmail,
+                profesion: newProfesion,
+                universidad: newUniversidad
+            });
+            guardarDatos();
+            renderizarDatosCandidato();
+            alert("Datos personales actualizados.");
+        }
+    }
+
+    function agregarNuevaExperiencia() {
+      const empresa = document.getElementById("expEmpresa").value;
+      const cargo = document.getElementById("expCargo").value;
+      const fechaInicio = document.getElementById("expFechaInicio").value;
+      const fechaFin = document.getElementById("expFechaFin").value;
+      if (agregarExperiencia(empresa, cargo, fechaInicio, fechaFin)) {
+        renderizarExperiencias();
+        document.getElementById("expEmpresa").value = '';
+        document.getElementById("expCargo").value = '';
+        document.getElementById("expFechaInicio").value = '';
+        document.getElementById("expFechaFin").value = '';
+      }
+    }
+
+    function renderizarExperiencias() {
+      const lista = document.getElementById("lista-experiencias");
+      lista.innerHTML = '';
+      if (usuarioActualCandidato.experiencias && usuarioActualCandidato.experiencias.length > 0) {
+        usuarioActualCandidato.experiencias.forEach((exp, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            ${exp.cargo} en ${exp.empresa} (${exp.fechaInicio} - ${exp.fechaFin || 'Actual'})
+            <button class="boton" onclick="editarExperiencia(${index})">Editar</button>
+            <button class="boton" onclick="eliminarExperiencia(${index}); renderizarExperiencias();">Eliminar</button>
+          `;
+          lista.appendChild(li);
+        });
+      } else {
+        lista.innerHTML = '<p>No se han registrado experiencias laborales.</p>';
+      }
+    }
+
+    function editarExperiencia(index) {
+        const exp = usuarioActualCandidato.experiencias[index];
+        const newEmpresa = prompt("Nueva empresa:", exp.empresa);
+        const newCargo = prompt("Nuevo cargo:", exp.cargo);
+        const newFechaInicio = prompt("Nueva fecha de inicio (AAAA-MM-DD):", exp.fechaInicio);
+        const newFechaFin = prompt("Nueva fecha de finalización (AAAA-MM-DD o vacío si actual):", exp.fechaFin);
+        if (newEmpresa !== null && newCargo !== null && newFechaInicio !== null && newFechaFin !== null) {
+            modificarExperiencia(index, {
+                empresa: newEmpresa,
+                cargo: newCargo,
+                fechaInicio: newFechaInicio,
+                fechaFin: newFechaFin
+            });
+            renderizarExperiencias();
+        }
+    }
+
+    function renderizarPostulaciones() {
+      const lista = document.getElementById("lista-postulaciones");
+      lista.innerHTML = '';
+      const postulaciones = obtenerMisPostulacionesOrdenadas(); // Ya están ordenadas por fecha
+
+      if (postulaciones.length > 0) {
+        postulaciones.forEach(post => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <strong>${post.oferta.titulo}</strong> en ${empresasRegistradas[post.oferta.empresa]?.nombre || post.oferta.empresa} - Postulado el: ${post.fecha}
+            (Estatus de oferta: ${post.oferta.estatus})
+          `;
+          lista.appendChild(li);
+        });
+      } else {
+        lista.innerHTML = '<p>No has realizado ninguna postulación aún.</p>';
+      }
+    }
+  </script>
+</body>
+</html>

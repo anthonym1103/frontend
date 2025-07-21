@@ -21,7 +21,7 @@ const UsuarioHirin = () => {
     }
 
     const handlerDataBasicaesClick = () => {
-        navegate('/registro')
+        navegate('/usuarioempresa/gestionardatabasica')
     }
 
     

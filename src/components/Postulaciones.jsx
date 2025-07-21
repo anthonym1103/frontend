@@ -4,7 +4,13 @@ import './hojasEstilos/estilos.css'
 const Postulaciones = () => {
     return(
         <div>
-            <BarraNav/>
+            <BarraNav
+                redireccion1={'/usuariohiring'}
+                texto1={"Regresar"}
+                redireccion2={''}
+                texto2={""}
+                tipo={false}
+            />
             <main>
                 <section>
                     <h2>Contratación de Postulantes</h2>
@@ -31,8 +37,6 @@ const Postulaciones = () => {
 
                         <button type="submit" class="boton">Contratar Candidato</button>
                     </form>
-
-                    <a class="boton" href="/usuariohiring"> Regresar</a>
                 </section>
             </main>
 

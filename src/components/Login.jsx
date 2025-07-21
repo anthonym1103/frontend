@@ -3,6 +3,32 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './hojasEstilos/estilos.css'
 
+function DataPrincipalLogin ({handlerSubmitForm,handlerInput,dataform, dataError}){
+    return(
+        <div>
+            <main>
+                <section>
+                    <h2>Iniciar Sesión</h2>
+                    <form onSubmit={handlerSubmitForm}>
+                        <label >Usuario:</label>
+                        <input type="text" id="usuario" name='correo' onChange={handlerInput} value={dataform.correo} placeholder="Tu usuario/correo" required />
+
+                        <label >Contraseña:</label>
+                        <input type="password" id="clave" name='contrasenia' onChange={handlerInput} value={dataform.contrasenia} placeholder="Tu contraseña" required />
+                        <div className="botnIniciarSesion">
+                            <span className="botonFormulario">
+                                <button type="submit" >Entrar</button>
+                            </span>
+                        </div>
+                    </form>
+                    <h3>{dataError !== ""? "CORREO O CONTRASEÑA INCORRECTA" : ""}</h3>
+                    
+                </section>
+            </main>
+        </div>
+    )
+}
+
 const Login = () => {
     const [dataForm, setDataForm] = useState({ correo: '', contrasenia: '' })
     const [error, setError] = useState("");
@@ -63,24 +89,16 @@ const Login = () => {
                 texto2={""}
                 tipo={false}
             />
-            <main>
-                <section>
-                    <h2>Iniciar Sesión</h2>
-                    <form onSubmit={handlerSubmit}>
-                        <label >Usuario:</label>
-                        <input type="text" id="usuario" name='correo' onChange={handlerFormInput} value={dataForm.correo} placeholder="Tu usuario/correo" required />
-
-                        <label >Contraseña:</label>
-                        <input type="password" id="clave" name='contrasenia' onChange={handlerFormInput} value={dataForm.contrasenia} placeholder="Tu contraseña" required />
-                        <div className="botnIniciarSesion">
-                            <span className="botonFormulario">
-                                <button type="submit" >Entrar</button>
-                            </span>
-                        </div>
-                    </form>
-                </section>
-            </main>
-
+            {
+                
+                <DataPrincipalLogin
+                    handlerSubmitForm={handlerSubmit}
+                    handlerInput={handlerFormInput}
+                    dataform={dataForm}
+                    dataError={error}
+                />
+                
+            }
             <footer>
                 <p>&copy; Hiring Group | Inicio de Sesión</p>
             </footer>

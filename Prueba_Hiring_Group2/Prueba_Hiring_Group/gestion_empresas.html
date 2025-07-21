@@ -1,0 +1,99 @@
+gestion_empresas
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Empresas</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar">
+    <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+      <nav>
+        <ul>
+          </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Gestión de Empresas Clientes</h2>
+
+      <h3>Registrar Nueva Empresa</h3>
+      <form onsubmit="event.preventDefault(); registrarNuevaEmpresa();">
+        <input type="text" id="nombreUsuarioEmpresa" placeholder="Usuario para Empresa (ej: 'empresaX')" required>
+        <input type="text" id="nombreEmpresa" placeholder="Nombre de la Empresa" required>
+        <input type="text" id="sectorEmpresa" placeholder="Sector (ej: 'Tecnología')" required>
+        <input type="text" id="contactoEmpresa" placeholder="Persona de Contacto" required>
+        <input type="text" id="usuarioRHEmpresa" placeholder="Usuario RH (provisional)" required>
+        <input type="password" id="claveRHEmpresa" placeholder="Clave RH (provisional)" required>
+        <button type="submit" class="boton">Registrar Empresa</button>
+      </form>
+
+      <h3>Listado de Empresas Registradas</h3>
+      <ul id="lista-empresas"></ul>
+
+      <a class="boton" href="hiring_group_panel.html"> Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Universidad Nacional Experimental de Guayana | Prof. María Raquel Herrera</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      renderizarEmpresas();
+    });
+    function registrarNuevaEmpresa() {
+      const nombreUsuario = document.getElementById("nombreUsuarioEmpresa").value;
+      const nombre = document.getElementById("nombreEmpresa").value;
+      const sector = document.getElementById("sectorEmpresa").value;
+      const contacto = document.getElementById("contactoEmpresa").value;
+      const usuarioRH = document.getElementById("usuarioRHEmpresa").value;
+      const claveRH = document.getElementById("claveRHEmpresa").value;
+      if (crearEmpresa(nombreUsuario, nombre, sector, contacto, usuarioRH, claveRH)) {
+        renderizarEmpresas();
+        // Limpiar formulario
+        document.getElementById("nombreUsuarioEmpresa").value = '';
+        document.getElementById("nombreEmpresa").value = '';
+        document.getElementById("sectorEmpresa").value = '';
+        document.getElementById("contactoEmpresa").value = '';
+        document.getElementById("usuarioRHEmpresa").value = '';
+        document.getElementById("claveRHEmpresa").value = '';
+      }
+    }
+
+    function renderizarEmpresas() {
+      const lista = document.getElementById("lista-empresas");
+      lista.innerHTML = ''; // Limpiar lista
+      const empresas = obtenerEmpresas();
+      empresas.forEach(emp => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${emp.nombre}</strong> (${emp.usuario}) - Sector: ${emp.sector}, Contacto: ${emp.contacto}, Usuario RH: ${emp.usuarioRH}
+          <button class="boton" onclick="eliminarEmpresa('${emp.usuario}'); renderizarEmpresas();">Eliminar</button>
+          <button class="boton" onclick="mostrarFormularioEditarEmpresa('${emp.usuario}', '${emp.nombre}', '${emp.sector}', '${emp.contacto}');">Editar</button>
+        `;
+        lista.appendChild(li);
+      });
+    }
+
+    function mostrarFormularioEditarEmpresa(usuario, nombre, sector, contacto) {
+        // Implementar un modal o un formulario inline para la edición
+        const newName = prompt("Nuevo nombre de empresa:", nombre);
+        const newSector = prompt("Nuevo sector:", sector);
+        const newContacto = prompt("Nueva persona de contacto:", contacto);
+        if (newName !== null && newSector !== null && newContacto !== null) {
+            actualizarEmpresa(usuario, { nombre: newName, sector: newSector, contacto: newContacto });
+            renderizarEmpresas();
+        }
+    }
+  </script>
+</body>
+</html>

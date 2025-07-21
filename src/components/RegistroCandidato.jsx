@@ -24,7 +24,7 @@ function FormRegisterCandidato({handlerForm, submitUser, dataform, backPage}){
                 <h2 id="textDatos">Datos de inicio de sesion en el sistema</h2>
                 <input type="email" name="correo" onChange={handlerForm} value={dataform.correo} placeholder="Correo..." required />
                 <input type="password" name="contrasenia" onChange={handlerForm} value={dataform.contrasenia} placeholder="Contraseña..." required />
-                <button className="boton">Registrarse</button>
+                <button className="boton" type="submit">Registrarse</button>
                 <a class="boton" onClick={backPage}>Regresar</a>
 
             </form>
@@ -33,7 +33,7 @@ function FormRegisterCandidato({handlerForm, submitUser, dataform, backPage}){
     )
 }
 
-function FormRegisterExperiencia({handlerFormEx, submitEx, dataformEx, nextPage,backPage}){
+function FormRegisterExperiencia({handlerFormEx, submitEx, dataformEx,backPage}){
     return(
         <div>
             
@@ -44,15 +44,15 @@ function FormRegisterExperiencia({handlerFormEx, submitEx, dataformEx, nextPage,
                 <input type="text" name="fecha_inicio" onChange={handlerFormEx} value={dataformEx.fecha_inicio} placeholder="Fecha de inicio..." required />
                 <input type="text" name="fecha_finalizacion" onChange={handlerFormEx} value={dataformEx.fecha_finalizacion} placeholder="Fecha de finalizacion..." required />
                 <input type="text" name="cargo" onChange={handlerFormEx} value={dataformEx.cargo} placeholder="Cargo..." required />
-                <button type="submit" className="boton" onClick={nextPage}>Siguiente</button>
-                <a class="boton" onClick={backPage}>Regresar</a>
+                <button type="submit" className="boton">Siguiente</button>
+                <a className="boton" onClick={backPage}>Regresar</a>
             </form>
            
         </div>
     )
 }
 
-function FormRegisterProfesion({handlerFormProf, submitProf, dataformProf, nextPage}){
+function FormRegisterProfesion({handlerFormProf, submitProf, dataformProf}){
     return(
         <div>
             <h2>Registro de Postulante</h2>
@@ -60,7 +60,7 @@ function FormRegisterProfesion({handlerFormProf, submitProf, dataformProf, nextP
             <form onSubmit={submitProf}>
                 <input type="text" name="nombre" onChange={handlerFormProf} value={dataformProf.nombre} placeholder="Nombre..." required />
                 <input type="text" name="descripcion" onChange={handlerFormProf} value={dataformProf.descripcion} placeholder="Descripcion..." required />
-                <button type="submit" className="boton" onClick={nextPage}>Siguiente</button>
+                <button type="submit" className="boton">Siguiente</button>
                 <a className="boton" href="/">Regresar</a>
             </form>
         </div>
@@ -70,7 +70,7 @@ function FormRegisterProfesion({handlerFormProf, submitProf, dataformProf, nextP
 function UserRegisted(){
     return(
         <div>
-            <h1>Holaaa ya estas registrado</h1>
+            <h1>Su registro fue hecho con exito ya puede iniciar sesion!!!</h1>
             <a class="boton" href="/">Regresar</a>
         </div>
     )
@@ -87,9 +87,6 @@ const RegistroCandidato = () => {
     const [dataFormProf, setDataFormProf] = useState({id: 1, nombre: '', descripcion: ''})
     const [inRegistro, setRegister] = useState(true)
 
-    const handlerNextEstado = () =>{
-        setEstado(estadoPage + 1)
-    }
     const handlerBackEstado = () =>{
         setEstado(estadoPage - 1)
     }
@@ -142,6 +139,7 @@ const RegistroCandidato = () => {
             },
             body: JSON.stringify(dataFormEx)
         })
+        setEstado(estadoPage + 1)
     }
     const handlerFormSubmitProfesion = async (e) => {
         e.preventDefault()
@@ -152,6 +150,7 @@ const RegistroCandidato = () => {
             },
             body: JSON.stringify(dataFormProf)
         })
+        setEstado(estadoPage + 1)
     }
     
 
@@ -173,14 +172,12 @@ const RegistroCandidato = () => {
                                     handlerFormProf={handlerFormInputProf}
                                     submitProf={handlerFormSubmitProfesion}
                                     dataformProf={dataFormProf}
-                                    nextPage = {handlerNextEstado}
                                 />
                             ) : estadoPage === 1 ? (
                                 <FormRegisterExperiencia
                                     handlerFormEx={handlerFormInputEx}
                                     submitEx={handlerFormSubmitExperiencia}
                                     dataformEx={dataFormEx}
-                                    nextPage = {handlerNextEstado}
                                     backPage = {handlerBackEstado}
                                 />
 

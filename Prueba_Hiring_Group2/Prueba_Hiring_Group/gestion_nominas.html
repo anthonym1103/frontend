@@ -1,0 +1,140 @@
+gestion_nominas
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Nóminas</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar">
+    <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+      <nav>
+        <ul>
+          </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Gestión de Nóminas</h2>
+
+      <h3>Generar Nómina por Empresa</h3>
+      <form onsubmit="event.preventDefault(); mostrarNominaEmpresa();">
+        <label for="selectEmpresaNomina">Seleccionar Empresa:</label>
+        <select id="selectEmpresaNomina" required></select>
+        <label for="mesNominaEmpresa">Mes:</label>
+        <input type="number" id="mesNominaEmpresa" min="1" max="12" value="7" required>
+        <label for="anioNominaEmpresa">Año:</label>
+        <input type="number" id="anioNominaEmpresa" min="2020" value="2024" required>
+        <button type="submit" class="boton">Generar Reporte</button>
+      </form>
+      <h4>Reporte de Nómina por Empresa</h4>
+      <div id="reporte-nomina-empresa"></div>
+
+      <h3>Generar Nómina General (por Empresas)</h3>
+      <form onsubmit="event.preventDefault(); mostrarNominaGeneral();">
+        <label for="mesNominaGeneral">Mes:</label>
+        <input type="number" id="mesNominaGeneral" min="1" max="12" value="7" required>
+        <label for="anioNominaGeneral">Año:</label>
+        <input type="number" id="anioNominaGeneral" min="2020" value="2024" required>
+        <button type="submit" class="boton">Generar Reporte General</button>
+      </form>
+      <h4>Reporte de Nómina General</h4>
+      <div id="reporte-nomina-general"></div>
+
+      <h3>Correr Nómina Mensual</h3>
+      <form onsubmit="event.preventDefault(); correrNomina();">
+        <label for="mesCorrida">Mes:</label>
+        <input type="number" id="mesCorrida" min="1" max="12" value="7" required>
+        <label for="anioCorrida">Año:</label>
+        <input type="number" id="anioCorrida" min="2020" value="2024" required>
+        <button type="submit" class="boton">Ejecutar Corrida de Nómina</button>
+      </form>
+
+      <a class="boton" href="hiring_group_panel.html"> Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Universidad Nacional Experimental de Guayana | Prof. María Raquel Herrera</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarEmpresasNomina();
+    });
+
+    function cargarEmpresasNomina() {
+      const selectEmpresa = document.getElementById("selectEmpresaNomina");
+      selectEmpresa.innerHTML = '<option value="">-- Seleccione una empresa --</option>';
+      const empresas = obtenerEmpresas();
+      empresas.forEach(emp => {
+        const option = document.createElement("option");
+        option.value = emp.nombre;
+        option.textContent = emp.nombre;
+        selectEmpresa.appendChild(option);
+      });
+    }
+
+    function mostrarNominaEmpresa() {
+      const empresaNombre = document.getElementById("selectEmpresaNomina").value;
+      const mes = parseInt(document.getElementById("mesNominaEmpresa").value);
+      const anio = parseInt(document.getElementById("anioNominaEmpresa").value);
+      const reporteDiv = document.getElementById("reporte-nomina-empresa");
+
+      const nomina = generarNominaEmpresa(empresaNombre, mes, anio);
+      if (nomina) {
+        let html = `<h3>Nómina para ${empresaNombre} (${mes}/${anio})</h3>`;
+        if (nomina.length > 0) {
+          html += '<ul>';
+          nomina.forEach(empleado => {
+            html += `<li>${empleado.nombre} - Cargo: ${empleado.cargo} - Salario: Bs. ${empleado.salario.toFixed(2)}</li>`;
+          });
+          html += '</ul>';
+        } else {
+          html += '<p>No hay empleados contratados para esta empresa en este período.</p>';
+        }
+        reporteDiv.innerHTML = html;
+      }
+    }
+
+    function mostrarNominaGeneral() {
+      const mes = parseInt(document.getElementById("mesNominaGeneral").value);
+      const anio = parseInt(document.getElementById("anioNominaGeneral").value);
+      const reporteDiv = document.getElementById("reporte-nomina-general");
+
+      const nominaGeneral = generarNominaGeneral(mes, anio);
+      if (nominaGeneral) {
+        let html = `<h3>Nómina General (${mes}/${anio})</h3>`;
+        for (const empresa in nominaGeneral) {
+          html += `<h4>${empresa}</h4>`;
+          if (nominaGeneral[empresa].length > 0) {
+            html += '<ul>';
+            nominaGeneral[empresa].forEach(empleado => {
+              html += `<li>${empleado.nombre} - Cargo: ${empleado.cargo} - Salario: Bs. ${empleado.salario.toFixed(2)}</li>`;
+            });
+            html += '</ul>';
+          } else {
+            html += '<p>No hay empleados para esta empresa.</p>';
+          }
+        }
+        reporteDiv.innerHTML = html;
+      }
+    }
+
+    function correrNomina() {
+      const mes = parseInt(document.getElementById("mesCorrida").value);
+      const anio = parseInt(document.getElementById("anioCorrida").value);
+      if (correrNominaMensual(mes, anio)) {
+        alert("Corrida de nómina ejecutada. Los recibos han sido generados para los contratados.");
+      }
+    }
+  </script>
+</body>
+</html>

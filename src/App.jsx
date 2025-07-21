@@ -9,23 +9,15 @@ import UsuarioEmpresa from './components/UsuarioEmpresa'
 import ActualizarOferta from './components/ActualizarOferta'
 import CreateOferta from './components/CrearOferta'
 import UsuarioCandidato from './components/UsuarioCandidato'
+import GestionarInicioSesion from './components/GestionarInicioSesion'
+import GestionarDataBasica from './components/GestionarDataBasica'
+import GestionPostulacion from './components/GestionarPostulacion'
+import ModificarExperiencia from './components/ModificarExperiencia'
+import ModificarProfesiones from './components/ModificarProfesiones'
 import { Route, Routes } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-
-  {/*const [postulacion, setPostulacion] = useState([])
-  
-  const getPostulaciones = async () => {
-    const allPostulaciones = await fetch("http://localhost:8000/userHG/postulaciones")
-    const postulacionJson = await allPostulaciones.json()
-    setPostulacion(postulacionJson)
-  } 
-
-  useEffect(() =>{
-    getPostulaciones()
-  })*/}
 
   return (
     <div>
@@ -40,7 +32,12 @@ function App() {
         <Route path='/usuarioempresa' element = {<UsuarioEmpresa/>}/>
         <Route path='/usuarioempresa/actualizaroferta' element = {<ActualizarOferta/>}/>
         <Route path='/usuarioempresa/crearoferta' element = {<CreateOferta/>}/>
+        <Route path='/usuarioempresa/gestionariniciosesion' element = {<GestionarInicioSesion/>}/>
+        <Route path='/usuarioempresa/gestionardatabasica' element = {<GestionarDataBasica/>}/>
         <Route path='/usuariocandidato' element = {<UsuarioCandidato/>}/>
+        <Route path='/usuariocandidato/gestionarpostulacion' element = {<GestionPostulacion/>}/>
+        <Route path='/usuariocandidato/modificarexperiencias' element = {<ModificarExperiencia/>}/>
+        <Route path='/usuariocandidato/modificarprofesiones' element = {<ModificarProfesiones/>}/>
       </Routes>
     </div>
   )

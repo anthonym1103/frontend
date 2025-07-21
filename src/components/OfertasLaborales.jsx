@@ -78,7 +78,7 @@ const OfertasLaborales = () => {
             <BarraNav
                 redireccion1={'/'}
                 texto1={"Ir a inicio"}
-                redireccion2={'/usuariohing'}
+                redireccion2={'/usuariohiring'}
                 texto2={"Regresar"}
                 tipo={true}
             />

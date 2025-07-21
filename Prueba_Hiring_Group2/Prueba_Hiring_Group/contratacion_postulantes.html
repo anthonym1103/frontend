@@ -1,0 +1,127 @@
+contratacion_postulante
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contratación de Postulantes</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar">
+    <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+      <nav>
+        <ul>
+          </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Contratación de Postulantes</h2>
+      <p>Selecciona una oferta y un candidato para formalizar una contratación.</p>
+
+      <h3>Ofertas Activas con Postulaciones</h3>
+      <ul id="lista-ofertas-contratacion"></ul>
+
+      <h3>Detalles de Contratación</h3>
+      <form onsubmit="event.preventDefault(); realizarContratacion();">
+        <label for="selectOferta">Seleccionar Oferta:</label>
+        <select id="selectOferta" required></select>
+
+        <label for="selectCandidato">Seleccionar Candidato:</label>
+        <select id="selectCandidato" required></select>
+
+        <input type="text" id="duracionContrato" placeholder="Duración del contrato (ej: '6 meses', 'indefinido')" required>
+        <input type="number" id="salarioContrato" placeholder="Salario mensual a devengar" required min="0">
+        <input type="text" id="tipoSangre" placeholder="Tipo de sangre" required>
+        <input type="text" id="contactoEmergencia" placeholder="Persona de contacto en caso de emergencia" required>
+        <input type="tel" id="telEmergencia" placeholder="Teléfono de emergencia" required>
+        <input type="text" id="nroCuenta" placeholder="Número de cuenta bancaria" required>
+        <input type="text" id="bancoContrato" placeholder="Banco (ej: 'Banco de Venezuela')" required>
+
+        <button type="submit" class="boton">Contratar Candidato</button>
+      </form>
+
+      <a class="boton" href="hiring_group_panel.html"> Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Universidad Nacional Experimental de Guayana | Prof. María Raquel Herrera</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarOfertasYcandidatos();
+    });
+    function cargarOfertasYcandidatos() {
+      const selectOferta = document.getElementById("selectOferta");
+      const selectCandidato = document.getElementById("selectCandidato");
+      const listaOfertasContratacion = document.getElementById("lista-ofertas-contratacion");
+      selectOferta.innerHTML = '<option value="">-- Seleccione una oferta --</option>';
+      selectCandidato.innerHTML = '<option value="">-- Seleccione un candidato --</option>';
+      listaOfertasContratacion.innerHTML = '';
+      const ofertasActivas = ofertasPublicadas.filter(o => o.estatus === "activa" && o.postulaciones.length > 0);
+      ofertasActivas.forEach(oferta => {
+        const option = document.createElement("option");
+        option.value = oferta.id;
+        option.textContent = `${oferta.titulo} (${empresasRegistradas[oferta.empresa]?.nombre || oferta.empresa}) - ${oferta.postulaciones.length} postulantes`;
+        selectOferta.appendChild(option);
+
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${oferta.titulo}</strong> (${empresasRegistradas[oferta.empresa]?.nombre || oferta.empresa})`;
+        if (oferta.postulaciones.length > 0) {
+            const ulPostulantes = document.createElement("ul");
+            oferta.postulaciones.forEach(candidatoId => {
+                const candidato = usuariosRegistrados[candidatoId];
+                if (candidato && candidato.tipo === "candidato") {
+                    const liCandidato = document.createElement("li");
+                    liCandidato.textContent = `- ${candidato.nombreCompleto} (${candidato.profesion})`;
+                    ulPostulantes.appendChild(liCandidato);
+                    // Añadir al select de candidatos
+                    const optionCandidato = document.createElement("option");
+                    optionCandidato.value = candidatoId;
+                    optionCandidato.textContent = `${candidato.nombreCompleto} (${candidato.profesion}) - Para oferta: ${oferta.titulo}`;
+                    selectCandidato.appendChild(optionCandidato);
+                }
+            });
+            li.appendChild(ulPostulantes);
+        } else {
+            li.textContent += " (Sin postulaciones)";
+        }
+        listaOfertasContratacion.appendChild(li);
+      });
+    }
+
+    function realizarContratacion() {
+      const ofertaId = parseInt(document.getElementById("selectOferta").value);
+      const candidatoUsuario = document.getElementById("selectCandidato").value;
+      const duracion = document.getElementById("duracionContrato").value;
+      const salario = parseFloat(document.getElementById("salarioContrato").value);
+      const tipoSangre = document.getElementById("tipoSangre").value;
+      const contactoEmergencia = document.getElementById("contactoEmergencia").value;
+      const telEmergencia = document.getElementById("telEmergencia").value;
+      const nroCuenta = document.getElementById("nroCuenta").value;
+      const banco = document.getElementById("bancoContrato").value;
+
+      if (contratarCandidato(ofertaId, candidatoUsuario, duracion, salario, tipoSangre, contactoEmergencia, telEmergencia, nroCuenta, banco)) {
+        cargarOfertasYcandidatos();
+        document.getElementById("selectOferta").value = '';
+        document.getElementById("selectCandidato").value = '';
+        document.getElementById("duracionContrato").value = '';
+        document.getElementById("salarioContrato").value = '';
+        document.getElementById("tipoSangre").value = '';
+        document.getElementById("contactoEmergencia").value = '';
+        document.getElementById("telEmergencia").value = '';
+        document.getElementById("nroCuenta").value = '';
+        document.getElementById("bancoContrato").value = '';
+      }
+    }
+  </script>
+</body>
+</html>

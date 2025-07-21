@@ -1,0 +1,114 @@
+ofertas_laborales
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ofertas Laborales</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar">
+    <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+      <nav>
+        <ul>
+          </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Ofertas de Trabajo Disponibles</h2>
+      <p>Aquí puedes ver las ofertas de trabajo y aplicar a ellas. También puedes filtrar por área de conocimiento o por salario (mayor a menor).</p>
+
+      <form onsubmit="event.preventDefault(); filtrarOfertas();">
+        <input type="text" id="filtroArea" placeholder="Filtrar por Área de conocimiento">
+        <label for="ordenSalario">Ordenar por Salario:</label>
+        <select id="ordenSalario">
+          <option value="">Sin orden</option>
+          <option value="desc">Mayor a Menor</option>
+        </select>
+        <button type="submit" class="boton">Aplicar Filtros</button>
+      </form>
+
+      <ul id="listado-ofertas">
+        </ul>
+        <a class="boton" href="index.html"> Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Hiring Group | Vacantes actualizadas</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    let ofertasMostradas = [];
+    // Variable global para guardar las ofertas actuales
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarOfertas();
+    });
+    function cargarOfertas(area = "", orden = "") {
+      let ofertas = ofertasPublicadas.filter(oferta => oferta.estatus === "activa");
+      if (area) {
+        ofertas = ofertas.filter(o => o.profesion.toLowerCase().includes(area.toLowerCase()));
+      }
+      if (orden === "desc") {
+        ofertas.sort((a, b) => b.salario - a.salario);
+      }
+
+      ofertasMostradas = ofertas;
+      renderizarOfertas(ofertas);
+    }
+
+    function renderizarOfertas(ofertas) {
+      const listado = document.getElementById("listado-ofertas");
+      listado.innerHTML = '';
+      if (ofertas.length === 0) {
+        listado.innerHTML = '<p>No se encontraron ofertas con los criterios seleccionados.</p>';
+        return;
+      }
+
+      ofertas.forEach(oferta => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${oferta.titulo}</strong> | Empresa: ${empresasRegistradas[oferta.empresa]?.nombre || oferta.empresa} | Salario: Bs. ${oferta.salario.toFixed(2)}<br>
+          Descripción: ${oferta.descripcion} <br>
+          Profesión: ${oferta.profesion} <br>
+          Cargo: ${oferta.cargo}
+          <button class="boton" onclick="aplicarPostulacion(${oferta.id})">Aplicar</button>
+        `;
+        listado.appendChild(li);
+      });
+    }
+
+    function filtrarOfertas() {
+      const area = document.getElementById("filtroArea").value;
+      const orden = document.getElementById("ordenSalario").value;
+      cargarOfertas(area, orden);
+    }
+
+    function aplicarPostulacion(ofertaId) {
+        const usuarioActivo = obtenerUsuarioActivo();
+        if (!usuarioActivo) {
+            alert("Debes iniciar sesión como candidato para aplicar a una oferta.");
+            window.location.href = "login.html";
+            return;
+        }
+        if (usuarioActivo.tipo !== "candidato") {
+            alert("Solo los usuarios de tipo 'Candidato' pueden aplicar a ofertas.");
+            return;
+        }
+
+        if (aplicarAOferta(ofertaId)) {
+
+            alert("Has aplicado a esta oferta exitosamente!");
+        }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio de Sesión</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="red-bar"> <div class="header-content">
+      <div class="header-logo-container">
+        <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+        <h1>Hiring Group</h1>
+      </div>
+      </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Iniciar Sesión</h2>
+      <form onsubmit="event.preventDefault(); iniciarSesion();">
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" placeholder="Tu usuario" required>
+
+        <label for="clave">Contraseña:</label>
+        <input type="password" id="clave" placeholder="Tu contraseña" required>
+
+        <button type="submit" class="boton-header">Entrar</button>
+      </form>
+      <a class="boton" href="index.html">Regresar </a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Hiring Group | Inicio de Sesión</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+</body>
+</html>

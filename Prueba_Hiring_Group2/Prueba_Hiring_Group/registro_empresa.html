@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro Empresa</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header>
+    <img src="recursos/logo_hiring_group.png" alt="Logo Hiring Group">
+    <h1>Hiring Group</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Registro de Empresa (Solicitud)</h2>
+      <form onsubmit="event.preventDefault(); registrarSolicitudEmpresa();">
+        <input type="text" id="nuevoUsuario" placeholder="Usuario para acceso de empresa" required>
+        <input type="password" id="clave" placeholder="Contraseña" required>
+        <input type="text" id="nombreEmpresa" placeholder="Nombre de tu Empresa" required>
+        <input type="email" id="correoEmpresa" placeholder="Correo de contacto" required>
+        <button type="submit" class="boton">Enviar Solicitud de Registro</button>
+      </form>
+      <a class="boton" href="index.html"> Regresar</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Hiring Group | Registro Empresa</p>
+  </footer>
+  <script src="js/control_acceso.js"></script>
+  <script>
+    // Esta función simula una solicitud, la empresa real se crearía desde el panel de Hiring Group
+    function registrarSolicitudEmpresa() {
+        const usuario = document.getElementById("nuevoUsuario").value;
+        const clave = document.getElementById("clave").value;
+        const nombreEmpresa = document.getElementById("nombreEmpresa").value;
+        const correoEmpresa = document.getElementById("correoEmpresa").value;
+        // Aquí podríamos registrarla como un tipo de usuario "solicitud_empresa"
+        // o simplemente mostrar un mensaje que se ha enviado la solicitud.
+        alert(`Solicitud de registro para la empresa "${nombreEmpresa}" enviada. Un administrador de Hiring Group la revisará.`);
+        window.location.href = "index.html";
+        // Redirigir al inicio
+    }
+  </script>
+</body>
+</html>
