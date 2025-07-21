@@ -5,6 +5,10 @@ import Login from './components/Login'
 import CreateEmpresa from './components/CreateEmpresa'
 import OfertasLaborales from './components/OfertasLaborales'
 import Postulaciones from './components/Postulaciones'
+import UsuarioEmpresa from './components/UsuarioEmpresa'
+import ActualizarOferta from './components/ActualizarOferta'
+import CreateOferta from './components/CrearOferta'
+import UsuarioCandidato from './components/UsuarioCandidato'
 import { Route, Routes } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import './App.css'
@@ -33,6 +37,10 @@ function App() {
         <Route path='/usuariohiring/empresacreate' element = {<CreateEmpresa/>}/>
         <Route path='/usuariohiring/ofertaslaborales' element = {<OfertasLaborales/>}/>
         <Route path='/usuariohiring/postulaciones' element = {<Postulaciones/>}/>
+        <Route path='/usuarioempresa' element = {<UsuarioEmpresa/>}/>
+        <Route path='/usuarioempresa/actualizaroferta' element = {<ActualizarOferta/>}/>
+        <Route path='/usuarioempresa/crearoferta' element = {<CreateOferta/>}/>
+        <Route path='/usuariocandidato' element = {<UsuarioCandidato/>}/>
       </Routes>
     </div>
   )

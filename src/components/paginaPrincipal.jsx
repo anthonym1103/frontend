@@ -32,7 +32,7 @@ const PaginaPrincipal = () =>{
                         <img src={empresa} alt="Logo Hiring Group"/>
                         <p className = "textAcceso">Accede o Regístrate para comenzar:</p>
                         <div id="main-menu-options" className="button-container">
-                            <button className="main-menu-button" onClick={handlerLoginClick}>Iniciar Sesión</button>
+                            <button className="main-menu-button" onClick={handlerLoginClick}>Acceder al Sistema</button>
                             <button className="main-menu-button" onClick={handlerRegisterClick}>Registrarse Como Candidato</button>
                         </div>
                     </div>
@@ -51,21 +51,6 @@ const PaginaPrincipal = () =>{
                 <p>&copy; Universidad Nacional Experimental de Guayana | Prof. María Raquel Herrera</p>
             </footer>
 
-            {/* <script src="js/control_acceso.js"></script>
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                // Muestra el nombre del usuario si está logueado
-                    const usuario = obtenerUsuarioActivo();
-                    if (usuario) {
-                        // Actualiza el mensaje de bienvenida
-                        document.getElementById('user-greeting').textContent = `¡Hola, ${usuario.nombreCompleto || usuario.usuario}!`;
-                    } else {
-                        // Si no hay usuario, el mensaje de bienvenida se oculta o se deja vacío
-                        document.getElementById('user-greeting').textContent = '';
-                    }
-                })
-                
-            </script> */}
         </div>
     )
 }

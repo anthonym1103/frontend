@@ -1,9 +1,11 @@
 import BarraNav from './BarraNav'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import './hojasEstilos/estilos.css'
 
 
 const UsuarioHirin = () => {
+    const location = useLocation();
+    const { dataOferta } = location.state || {};
     const navegate = useNavigate()
 
     const handlerEmpresaCreateClick = () => {
@@ -26,7 +28,13 @@ const UsuarioHirin = () => {
     
     return(
         <div>
-            <BarraNav/>
+            <BarraNav
+                redireccion1={'/'}
+                texto1={"Ir a inicio"}
+                redireccion2={''}
+                texto2={""}
+                tipo={false}
+            />
             <main>
                 <section>
                     <h2>Panel de Gestión Hiring Group</h2>
@@ -45,7 +53,6 @@ const UsuarioHirin = () => {
                     <button class="boton" onClick={handlerDataBasicaesClick}>Administrar Bancos y Otros</button>
 
                 </section>
-                <a class="boton" href="/">Regresar</a>
             </main>
 
             <footer>
